@@ -1,7 +1,7 @@
 {
   "name": "nslide",
   "version": "1.0.0",
-  "description": "A minimalistic one-image-per-page slider",
+  "description": "A minimalistic slider",
   "main": "lib/nslide.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
