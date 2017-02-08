@@ -2,7 +2,9 @@
     "compilerOptions": { 
         "target": "es6",
         "moduleResolution": "node",
-        "outDir": "lib",
-        "rootDir": "/"
-    }
+        "outDir": "lib"
+    },
+    "include": [
+        "src/**/*"
+    ]
 }
