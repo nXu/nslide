@@ -8,7 +8,7 @@
         .nslide {
             display: flex;
             flex-flow: row nowrap;
-            height: 30 vw;
+            height: 30vw;
             overflow: hidden;
         }
 
@@ -16,10 +16,10 @@
             display: none;
             opacity: 0;
             transition: opacity .3s;
+            width: 100vw;
         }
 
         .nslide .item.loaded {
-            display: block;
             opacity: 1;
         }
     </style>
@@ -27,14 +27,15 @@
 <body>
     <div id="nslide" class="nslide">
         <div class="item">
-            <img src="http://lorempixel.com/1920/1080" alt="Image 1">
+            <img src="http://lorempixel.com/1920/576?nocache=1" alt="Image 1">
         </div>
         <div class="item">
-            <img src="http://lorempixel.com/1920/1080" alt="Image 2">
+            <img src="http://lorempixel.com/1920/576?nocache=2" alt="Image 2">
         </div>
         <div class="item">
-            <img src="http://lorempixel.com/1920/1080" alt="Image 3">
+            <img src="http://lorempixel.com/1920/576?nocache=3" alt="Image 3">
         </div>
     </div>
+    <script src="demo.bundle.js"></script>
 </body>
 </html>
