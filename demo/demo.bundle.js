@@ -99,6 +99,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var NSlide = function () {
+    // Initializes a new instance of the NSlide class
     function NSlide(selector, options) {
         _classCallCheck(this, NSlide);
 
@@ -108,10 +109,7 @@ var NSlide = function () {
             animation: false,
             dots: true,
             nav: true,
-            autoplay: {
-                enabled: true,
-                speed: 3000
-            }
+            autoplay: 5000
         };
         this.page = 1;
         // Initialize options
@@ -124,8 +122,8 @@ var NSlide = function () {
         _lodash2.default.each(this.items, function (node) {
             return node.classList.add('loaded');
         });
-        // Start autoplay if necessary
-        this.autoplay();
+        // Display first page
+        this.showPage(1);
     }
     // Switches to the next element
 
@@ -133,37 +131,40 @@ var NSlide = function () {
     _createClass(NSlide, [{
         key: 'next',
         value: function next() {
-            // Remove active class from each element add add it to the active one
-            var currentElement = this.items[this.page - 1];
             var nextPage = this.page >= this.items.length ? 1 : this.page + 1;
-            var nextElement = this.items[nextPage - 1];
-            _lodash2.default.each(this.items, function (item) {
-                return item.classList.remove('active');
-            });
-            // TODO: Play animations
-            switch (this.options['animation']) {
-                default:
-                    currentElement.style.display = 'none';
-                    nextElement.style.display = 'block;';
-                    break;
-            }
-            // Add active class to thea ctive element
-            nextElement.classList.add('active');
-            // Initialize nex tick of the autoplay
-            this.autoplay();
-            this.page = nextPage;
+            this.showPage(nextPage);
         }
         // Swtiches to the previous element
 
     }, {
         key: 'previous',
-        value: function previous() {}
+        value: function previous() {
+            var nextPage = this.page <= 1 ? this.items.length : this.page - 1;
+            this.showPage(nextPage);
+        }
         // Gets the current page displayed on the slider
 
     }, {
         key: 'getPage',
         value: function getPage() {
             return this.page;
+        }
+        // Displays a selected page
+
+    }, {
+        key: 'showPage',
+        value: function showPage(page) {
+            var currentElement = this.items[this.page - 1];
+            var nextElement = this.items[page - 1];
+            _lodash2.default.each(this.items, function (item) {
+                return item.classList.remove('active');
+            });
+            this.animateOut(currentElement);
+            this.animateIn(nextElement);
+            nextElement.classList.add('active');
+            // Initialize next tick of the autoplay
+            this.autoplay();
+            this.page = page;
         }
         // Initializes the next tick of the autoplay
 
@@ -172,7 +173,7 @@ var NSlide = function () {
         value: function autoplay() {
             var _this = this;
 
-            if (this.options['autoplay'].enabled) {
+            if (!this.options['autoplay']) {
                 return;
             }
             // Stop already existing tick if necessary
@@ -181,18 +182,30 @@ var NSlide = function () {
             }
             this.intervalId = setTimeout(function () {
                 return _this.next();
-            }, this.options['autoplay'].speed);
+            }, this.options['autoplay']);
         }
         // Animates a selected element out
 
     }, {
         key: 'animateOut',
-        value: function animateOut(item) {}
+        value: function animateOut(item) {
+            switch (this.options['animation']) {
+                default:
+                    item.style.display = 'none';
+                    break;
+            }
+        }
         // Animates a selected element in
 
     }, {
         key: 'animateIn',
-        value: function animateIn(item) {}
+        value: function animateIn(item) {
+            switch (this.options['animation']) {
+                default:
+                    item.style.display = 'block';
+                    break;
+            }
+        }
     }]);
 
     return NSlide;

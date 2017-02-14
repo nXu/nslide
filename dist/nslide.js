@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import 'classlist-polyfill';
 export default class NSlide {
+    // Initializes a new instance of the NSlide class
     constructor(selector, options) {
         this.selector = selector;
         this.options = options;
@@ -8,10 +9,7 @@ export default class NSlide {
             animation: false,
             dots: true,
             nav: true,
-            autoplay: {
-                enabled: true,
-                speed: 3000
-            }
+            autoplay: 5000
         };
         this.page = 1;
         // Initialize options
@@ -22,51 +20,60 @@ export default class NSlide {
         this.items[0].classList.add('active');
         // Total width is set, fade in the elements
         _.each(this.items, (node) => node.classList.add('loaded'));
-        // Start autoplay if necessary
-        this.autoplay();
+        // Display first page
+        this.showPage(1);
     }
     // Switches to the next element
     next() {
-        // Remove active class from each element add add it to the active one
-        let currentElement = this.items[this.page - 1];
         let nextPage = this.page >= this.items.length ? 1 : this.page + 1;
-        let nextElement = this.items[nextPage - 1];
-        _.each(this.items, (item) => item.classList.remove('active'));
-        // TODO: Play animations
-        switch (this.options['animation']) {
-            default:
-                currentElement.style.display = 'none';
-                nextElement.style.display = 'block;';
-                break;
-        }
-        // Add active class to thea ctive element
-        nextElement.classList.add('active');
-        // Initialize nex tick of the autoplay
-        this.autoplay();
-        this.page = nextPage;
+        this.showPage(nextPage);
     }
     // Swtiches to the previous element
     previous() {
+        let nextPage = this.page <= 1 ? this.items.length : this.page - 1;
+        this.showPage(nextPage);
     }
     // Gets the current page displayed on the slider
     getPage() {
         return this.page;
     }
+    // Displays a selected page
+    showPage(page) {
+        let currentElement = this.items[this.page - 1];
+        let nextElement = this.items[page - 1];
+        _.each(this.items, (item) => item.classList.remove('active'));
+        this.animateOut(currentElement);
+        this.animateIn(nextElement);
+        nextElement.classList.add('active');
+        // Initialize next tick of the autoplay
+        this.autoplay();
+        this.page = page;
+    }
     // Initializes the next tick of the autoplay
     autoplay() {
-        if (this.options['autoplay'].enabled) {
+        if (!this.options['autoplay']) {
             return;
         }
         // Stop already existing tick if necessary
         if (this.intervalId > 0) {
             clearTimeout(this.intervalId);
         }
-        this.intervalId = setTimeout(() => this.next(), this.options['autoplay'].speed);
+        this.intervalId = setTimeout(() => this.next(), this.options['autoplay']);
     }
     // Animates a selected element out
     animateOut(item) {
+        switch (this.options['animation']) {
+            default:
+                item.style.display = 'none';
+                break;
+        }
     }
     // Animates a selected element in
     animateIn(item) {
+        switch (this.options['animation']) {
+            default:
+                item.style.display = 'block';
+                break;
+        }
     }
 }
